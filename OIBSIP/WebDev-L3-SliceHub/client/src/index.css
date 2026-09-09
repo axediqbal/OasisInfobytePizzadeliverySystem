@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: oklch(0.16 0.02 260);
+    color: oklch(0.95 0 0);
+    letter-spacing: -0.015em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Clash Display', 'General Sans', system-ui, sans-serif;
+    letter-spacing: -0.025em;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: oklch(0.16 0.02 260);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.28 0.02 260);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.68 0.19 35);
+  }
+}
+
+@layer components {
+  /* Glass card utility */
+  .glass-card {
+    background: rgba(30, 32, 44, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid oklch(1 0 0 / 0.08);
+  }
+
+  /* Primary Button */
+  .btn-primary {
+    @apply bg-accent hover:bg-accent-hover text-white font-semibold px-5 py-2.5 rounded-input transition-all duration-200 shadow-warm hover:shadow-accent-glow active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-accent disabled:active:scale-100 flex items-center justify-center gap-2;
+  }
+
+  /* Secondary Button */
+  .btn-secondary {
+    @apply bg-surface hover:bg-surface-hover text-primary-text border border-border font-medium px-5 py-2.5 rounded-input transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2;
+  }
+
+  /* Form Input */
+  .form-input {
+    @apply w-full bg-surface border border-border rounded-input px-4 py-2.5 text-primary-text placeholder-primary-muted focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent transition-all duration-150;
+  }
+
+  /* Status badge */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+}
