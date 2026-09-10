@@ -25,7 +25,7 @@ connectDB();
 // Global Middleware
 const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 app.use(cors({
-  origin: [clientUrl, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+  origin: (origin, callback) => callback(null, true),
   credentials: true,
 }));
 app.use(express.json());
@@ -53,10 +53,14 @@ app.use(errorHandler);
 initLowStockJob();
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`\n======================================================`);
-  console.log(`🍕 SliceHub API Server running on port ${PORT}`);
-  console.log(`📡 URL: http://localhost:${PORT}`);
-  console.log(`🚀 Client Origin: ${clientUrl}`);
-  console.log(`======================================================\n`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`\n======================================================`);
+    console.log(`🍕 SliceHub API Server running on port ${PORT}`);
+    console.log(`📡 URL: http://localhost:${PORT}`);
+    console.log(`🚀 Client Origin: ${clientUrl}`);
+    console.log(`======================================================\n`);
+  });
+}
+
+module.exports = app;
