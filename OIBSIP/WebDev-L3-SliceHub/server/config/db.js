@@ -18,8 +18,14 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 5000,
     };
 
-    cached.promise = mongoose.connect(mongoURI, opts).then((mongooseInstance) => {
+    cached.promise = mongoose.connect(mongoURI, opts).then(async (mongooseInstance) => {
       console.log(`[MongoDB] Connected successfully: ${mongooseInstance.connection.host}/${mongooseInstance.connection.name}`);
+      try {
+        const autoSeedIfEmpty = require('./autoSeed');
+        await autoSeedIfEmpty();
+      } catch (seedErr) {
+        console.warn('[AutoSeed notice]', seedErr.message);
+      }
       return mongooseInstance;
     }).catch((err) => {
       cached.promise = null;
@@ -39,4 +45,5 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
+
 
