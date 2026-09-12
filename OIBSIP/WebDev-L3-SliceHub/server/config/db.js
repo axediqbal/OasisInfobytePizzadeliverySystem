@@ -1,15 +1,42 @@
 const mongoose = require('mongoose');
 
+let cached = global.mongoose;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
 const connectDB = async () => {
-  try {
-    const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/slicehub';
-    const conn = await mongoose.connect(mongoURI);
-    console.log(`[MongoDB] Connected successfully: ${conn.connection.host}/${conn.connection.name}`);
-  } catch (error) {
-    console.error(`[MongoDB] Connection error: ${error.message}`);
-    // Don't crash immediately in dev mode, log retry hint
-    console.warn('[MongoDB] Please make sure MongoDB is running locally or provide a valid MONGO_URI in .env');
+  if (cached.conn && mongoose.connection.readyState === 1) {
+    return cached.conn;
   }
+
+  const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/slicehub';
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 5000,
+    };
+
+    cached.promise = mongoose.connect(mongoURI, opts).then((mongooseInstance) => {
+      console.log(`[MongoDB] Connected successfully: ${mongooseInstance.connection.host}/${mongooseInstance.connection.name}`);
+      return mongooseInstance;
+    }).catch((err) => {
+      cached.promise = null;
+      console.error(`[MongoDB] Connection error: ${err.message}`);
+      throw err;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+
+  return cached.conn;
 };
 
 module.exports = connectDB;
+

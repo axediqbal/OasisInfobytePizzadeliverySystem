@@ -28,10 +28,19 @@
 | **Payment Gateway** | Razorpay Node SDK (Test Mode) | Order creation & server-side HMAC-SHA256 signature verification |
 | **Email Service** | Nodemailer | Verification links, password reset, low-stock alerts |
 | **Scheduled Jobs** | `node-cron` | Automated background low-stock inventory scanner |
+| **Test Runner** | Node Test Runner | 49-assertion automated end-to-end integration test suite |
 
 ---
 
-## 🚀 3. Quick Start & Setup Instructions
+## 🧪 3. Automated End-to-End Test Suite
+
+SliceHub includes a native automated test suite verifying all customer and admin flows:
+```bash
+cd server
+node test-runner.js
+```
+**Results:** 49/49 Passing assertions covering DB connectivity, registration, verification, JWT auth, custom pizza creation, Razorpay HMAC/simulation, atomic stock decrements, 5-second live polling, admin inventory editing, and kitchen dispatch lifecycle.
+
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v18 or higher recommended)

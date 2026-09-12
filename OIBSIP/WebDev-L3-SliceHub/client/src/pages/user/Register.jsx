@@ -48,7 +48,10 @@ const Register = () => {
     try {
       setLoading(true);
       const res = await register(formData.name, formData.email, formData.password);
-      setSuccessMessage(res.message || 'Registration successful! Please verify your email.');
+      setSuccessMessage({
+        text: res.message || 'Registration successful! Please verify your email.',
+        token: res.verificationToken,
+      });
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Registration failed. Please try again.');
     } finally {
@@ -81,19 +84,31 @@ const Register = () => {
           )}
 
           {successMessage ? (
-            <div className="p-6 rounded-card bg-success/10 border border-success/30 text-center space-y-4">
+            <div className="p-6 rounded-card bg-success/10 border border-success/30 text-center space-y-4 animate-fadeIn">
               <CheckCircle2 className="w-12 h-12 text-success mx-auto" />
-              <h3 className="font-display font-bold text-lg text-primary-text">Check Your Inbox!</h3>
+              <h3 className="font-display font-bold text-lg text-primary-text">Account Created!</h3>
               <p className="text-xs text-primary-muted leading-relaxed">
-                {successMessage}
+                {typeof successMessage === 'object' ? successMessage.text : successMessage}
               </p>
+              {successMessage.token && (
+                <div className="pt-2 pb-1">
+                  <Link
+                    to={`/verify-email?token=${successMessage.token}`}
+                    className="btn-primary text-xs w-full py-2.5 shadow-warm"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>Instant 1-Click Verification (Dev Mode)</span>
+                  </Link>
+                </div>
+              )}
               <div className="pt-2">
-                <Link to="/login" className="btn-primary text-sm w-full">
+                <Link to="/login" className="btn-secondary text-sm w-full">
                   Proceed to Login
                 </Link>
               </div>
             </div>
           ) : (
+
             <form onSubmit={handleSubmit} className="space-y-4">
               
               {/* Name field */}

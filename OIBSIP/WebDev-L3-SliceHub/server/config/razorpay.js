@@ -21,8 +21,14 @@ const getRazorpayInstance = () => {
     instance: razorpayInstance,
     key_id,
     key_secret,
-    isConfigured: Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET && !process.env.RAZORPAY_KEY_ID.includes('your_'))
+    isConfigured: Boolean(
+      process.env.RAZORPAY_KEY_ID &&
+      process.env.RAZORPAY_KEY_SECRET &&
+      !process.env.RAZORPAY_KEY_ID.includes('your_') &&
+      !process.env.RAZORPAY_KEY_ID.includes('demo')
+    )
   };
 };
 
 module.exports = getRazorpayInstance;
+
